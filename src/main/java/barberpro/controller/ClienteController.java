@@ -35,4 +35,5 @@ public class ClienteController {
     public String teste() {
         return "BarberPro funcionando!";
     }
+    
 }
