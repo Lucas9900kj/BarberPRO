@@ -15,6 +15,11 @@ public class ClienteService {
         this.clienteRepository = clienteRepository;
     }
 
+    public Cliente buscarPorId(Long id) {
+    return clienteRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+}
+
     public List<Cliente> listarClientes() {
         return clienteRepository.findAll();
     }

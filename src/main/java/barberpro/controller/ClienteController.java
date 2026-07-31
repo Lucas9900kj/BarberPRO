@@ -30,10 +30,15 @@ public class ClienteController {
     public void excluirCliente(@PathVariable Long id) {
         clienteService.excluirCliente(id);
     }
+    
+    @GetMapping("/{id}")
+public Cliente buscarPorId(@PathVariable Long id) {
+    return clienteService.buscarPorId(id);
+    }
 
     @GetMapping("/teste")
-    public String teste() {
-        return "BarberPro funcionando!";
+public String teste() {
+    return "BarberPro funcionando!";
     }
     
 }
