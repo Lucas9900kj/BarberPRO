@@ -25,7 +25,16 @@ public class Agendamento {
 
     private LocalDateTime dataHora;
 
-    public Agendamento() {
+    public Agendamento(
+            Cliente cliente,
+            Barbeiro barbeiro,
+            Servico servico,
+            LocalDateTime dataHora) {
+
+        this.cliente = cliente;
+        this.barbeiro = barbeiro;
+        this.servico = servico;
+        this.dataHora = dataHora;
     }
 
     public Long getId() {
