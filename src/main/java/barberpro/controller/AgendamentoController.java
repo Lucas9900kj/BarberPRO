@@ -9,6 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/agendamentos")
 public class AgendamentoController {
+    
 
     private final AgendamentoService agendamentoService;
 

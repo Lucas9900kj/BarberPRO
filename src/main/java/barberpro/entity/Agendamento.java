@@ -11,19 +11,23 @@ public class Agendamento {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "barbeiro_id")
     private Barbeiro barbeiro;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "servico_id")
     private Servico servico;
 
     private LocalDateTime dataHora;
+
+
+    public Agendamento() {
+    }
 
     public Agendamento(
             Cliente cliente,
@@ -36,6 +40,8 @@ public class Agendamento {
         this.servico = servico;
         this.dataHora = dataHora;
     }
+
+    // getters e setters
 
     public Long getId() {
         return id;
