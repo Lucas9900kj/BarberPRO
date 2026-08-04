@@ -114,8 +114,6 @@ O objetivo do projeto é digitalizar processos que normalmente são realizados m
 * Agendamentos
 * Relatórios
 
-*(Adicionar screenshots após o desenvolvimento)*
-
 ---
 
 ## 🎯 Objetivo de Aprendizado
