@@ -47,6 +47,10 @@ public class Agendamento {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Cliente getCliente() {
         return cliente;
     }
@@ -78,4 +82,5 @@ public class Agendamento {
     public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
     }
+
 }
