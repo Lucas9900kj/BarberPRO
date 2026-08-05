@@ -25,6 +25,10 @@ public class Agendamento {
 
     private LocalDateTime dataHora;
 
+    @Enumerated(EnumType.STRING)
+    private StatusAgendamento status = StatusAgendamento.AGENDADO;
+    
+
 
     public Agendamento() {
     }
@@ -39,6 +43,7 @@ public class Agendamento {
         this.barbeiro = barbeiro;
         this.servico = servico;
         this.dataHora = dataHora;
+        this.status = StatusAgendamento.AGENDADO;
     }
 
     // getters e setters
@@ -81,6 +86,14 @@ public class Agendamento {
 
     public void setDataHora(LocalDateTime dataHora) {
         this.dataHora = dataHora;
+    }
+
+    public StatusAgendamento getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusAgendamento status) {
+        this.status = status;
     }
 
 }
