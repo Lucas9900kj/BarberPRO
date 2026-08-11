@@ -3,6 +3,7 @@ package barberpro.controller;
 import barberpro.entity.Agendamento;
 import barberpro.service.AgendamentoService;
 import org.springframework.web.bind.annotation.*;
+import barberpro.dto.StatusAgendamentoDTO;
 
 import java.util.List;
 
@@ -44,5 +45,13 @@ public class AgendamentoController {
 
             return agendamentoService.atualizarAgendamento(id, agendamento);
         }
+
+    @PatchMapping("/{id}/status")
+    public Agendamento alterarStatus(
+            @PathVariable Long id,
+            @RequestBody StatusAgendamentoDTO statusAgendamentoDTO) {
+
+        return agendamentoService.alterarStatus(id, statusAgendamentoDTO.getStatus());
+    }
 
 }

@@ -1,6 +1,7 @@
 package barberpro.service;
 
 import barberpro.entity.Agendamento;
+import barberpro.entity.StatusAgendamento;
 import barberpro.repository.AgendamentoRepository;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,15 @@ public class AgendamentoService {
                 .orElseThrow(() ->
                         new RuntimeException("Agendamento não encontrado."));
     }
+
+    public Agendamento alterarStatus(Long id, StatusAgendamento status) {
+
+    Agendamento agendamento = buscarPorId(id);
+
+    agendamento.setStatus(status);
+
+    return agendamentoRepository.save(agendamento);
+   }
 
     public void excluirAgendamento(Long id) {
         agendamentoRepository.deleteById(id);
