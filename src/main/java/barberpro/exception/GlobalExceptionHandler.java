@@ -27,4 +27,17 @@ public class GlobalExceptionHandler {
 
         return erros;
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> tratarRegraNegocio(
+            IllegalArgumentException ex) {
+
+        Map<String, String> erro = new HashMap<>();
+
+        erro.put("erro", ex.getMessage());
+
+        return erro;
+  }
+
 }

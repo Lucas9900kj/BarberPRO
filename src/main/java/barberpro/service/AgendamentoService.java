@@ -5,6 +5,7 @@ import barberpro.entity.StatusAgendamento;
 import barberpro.repository.AgendamentoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -22,19 +23,25 @@ public class AgendamentoService {
 
     public Agendamento salvarAgendamento(Agendamento agendamento) {
 
-        boolean ocupado =
-                agendamentoRepository.existsByBarbeiroIdAndDataHora(
-                        agendamento.getBarbeiro().getId(),
-                        agendamento.getDataHora()
-                );
+    if (agendamento.getDataHora().isBefore(LocalDateTime.now())) {
+        throw new IllegalArgumentException(
+                "Não é possível realizar um agendamento para uma data passada."
+        );
+    }
 
-        if (ocupado) {
-            throw new IllegalArgumentException(
-                    "O barbeiro já possui um agendamento nesse horário."
+    boolean ocupado =
+            agendamentoRepository.existsByBarbeiroIdAndDataHora(
+                    agendamento.getBarbeiro().getId(),
+                    agendamento.getDataHora()
             );
-        }
 
-        return agendamentoRepository.save(agendamento);
+    if (ocupado) {
+        throw new IllegalArgumentException(
+                "O barbeiro já possui um agendamento nesse horário."
+        );
+    }
+
+    return agendamentoRepository.save(agendamento);
     }
 
     public Agendamento buscarPorId(Long id) {
