@@ -5,6 +5,7 @@ import barberpro.service.AgendamentoService;
 import org.springframework.web.bind.annotation.*;
 import barberpro.dto.StatusAgendamentoDTO;
 import jakarta.validation.Valid;
+import barberpro.dto.AgendamentoResponseDTO;
 
 import java.util.List;
 
@@ -30,8 +31,12 @@ public class AgendamentoController {
     }
 
     @PostMapping
-    public Agendamento salvarAgendamento(@Valid @RequestBody Agendamento agendamento) {
-        return agendamentoService.salvarAgendamento(agendamento);
+    public AgendamentoResponseDTO salvarAgendamento(
+            @Valid @RequestBody Agendamento agendamento) {
+
+        Agendamento salvo = agendamentoService.salvarAgendamento(agendamento);
+
+        return agendamentoService.converterParaDTO(salvo);
     }
 
     @DeleteMapping("/{id}")
