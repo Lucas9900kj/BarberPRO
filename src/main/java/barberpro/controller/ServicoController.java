@@ -3,6 +3,7 @@ package barberpro.controller;
 import barberpro.entity.Servico;
 import barberpro.service.ServicoService;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class ServicoController {
     }
 
     @PostMapping
-    public Servico salvarServico(@RequestBody Servico servico) {
+    public Servico salvarServico(@Valid @RequestBody Servico servico) {
         return servicoService.salvarServico(servico);
     }
 }

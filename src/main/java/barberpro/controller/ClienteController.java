@@ -2,6 +2,8 @@ package barberpro.controller;
 
 import barberpro.entity.Cliente;
 import barberpro.service.ClienteService;
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class ClienteController {
     }
 
     @PostMapping
-    public Cliente criarCliente(@RequestBody Cliente cliente) {
+    public Cliente criarCliente(@Valid @RequestBody Cliente cliente) {
         return clienteService.salvarCliente(cliente);
     }
 

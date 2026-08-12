@@ -1,6 +1,7 @@
 package barberpro.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,16 +14,20 @@ public class Agendamento {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cliente_id")
+    @NotNull(message = "O cliente é obrigatório")
     private Cliente cliente;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "barbeiro_id")
+    @NotNull(message = "O barbeiro é obrigatório")
     private Barbeiro barbeiro;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "servico_id")
+    @NotNull(message = "O serviço é obrigatório")
     private Servico servico;
 
+    @NotNull(message = "A data e hora são obrigatórias")
     private LocalDateTime dataHora;
 
     @Enumerated(EnumType.STRING)

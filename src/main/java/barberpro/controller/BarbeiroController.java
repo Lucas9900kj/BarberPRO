@@ -5,6 +5,7 @@ import barberpro.service.BarbeiroService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/barbeiros")
@@ -22,7 +23,7 @@ public class BarbeiroController {
     }
 
     @PostMapping
-    public Barbeiro criarBarbeiro(@RequestBody Barbeiro barbeiro) {
+    public Barbeiro criarBarbeiro(@Valid @RequestBody Barbeiro barbeiro) {
         return barbeiroService.salvarBarbeiro(barbeiro);
     }
 

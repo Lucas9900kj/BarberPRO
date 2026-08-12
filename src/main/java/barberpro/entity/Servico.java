@@ -1,6 +1,9 @@
 package barberpro.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 @Entity
 @Table(name = "servicos")
@@ -10,8 +13,11 @@ public class Servico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "O nome é obrigatório")
     private String nome;
 
+    @NotNull(message = "O preço é obrigatório")
+    @Positive(message = "O preço deve ser um valor positivo")
     private Double preco;
 
     public Servico() {
