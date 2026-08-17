@@ -1,18 +1,18 @@
 package barberpro.controller;
 
+import barberpro.dto.AgendamentoResponseDTO;
+import barberpro.dto.StatusAgendamentoDTO;
 import barberpro.entity.Agendamento;
 import barberpro.service.AgendamentoService;
-import org.springframework.web.bind.annotation.*;
-import barberpro.dto.StatusAgendamentoDTO;
 import jakarta.validation.Valid;
-import barberpro.dto.AgendamentoResponseDTO;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/agendamentos")
 public class AgendamentoController {
-    
 
     private final AgendamentoService agendamentoService;
 
@@ -21,13 +21,19 @@ public class AgendamentoController {
     }
 
     @GetMapping
-    public List<Agendamento> listarAgendamentos() {
-        return agendamentoService.listarAgendamentos();
+    public List<AgendamentoResponseDTO> listarAgendamentos() {
+        return agendamentoService.listarAgendamentos()
+                .stream()
+                .map(agendamentoService::converterParaDTO)
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Agendamento buscarPorId(@PathVariable Long id) {
-        return agendamentoService.buscarPorId(id);
+    public AgendamentoResponseDTO buscarPorId(@PathVariable Long id) {
+
+        Agendamento agendamento = agendamentoService.buscarPorId(id);
+
+        return agendamentoService.converterParaDTO(agendamento);
     }
 
     @PostMapping
@@ -45,19 +51,27 @@ public class AgendamentoController {
     }
 
     @PutMapping("/{id}")
-    public Agendamento atualizar(
+    public AgendamentoResponseDTO atualizar(
             @PathVariable Long id,
             @RequestBody Agendamento agendamento) {
 
-            return agendamentoService.atualizarAgendamento(id, agendamento);
-        }
+        Agendamento atualizado =
+                agendamentoService.atualizarAgendamento(id, agendamento);
+
+        return agendamentoService.converterParaDTO(atualizado);
+    }
 
     @PatchMapping("/{id}/status")
-    public Agendamento alterarStatus(
+    public AgendamentoResponseDTO alterarStatus(
             @PathVariable Long id,
             @RequestBody StatusAgendamentoDTO statusAgendamentoDTO) {
 
-        return agendamentoService.alterarStatus(id, statusAgendamentoDTO.getStatus());
-    }
+        Agendamento atualizado =
+                agendamentoService.alterarStatus(
+                        id,
+                        statusAgendamentoDTO.getStatus()
+                );
 
+        return agendamentoService.converterParaDTO(atualizado);
+    }
 }
