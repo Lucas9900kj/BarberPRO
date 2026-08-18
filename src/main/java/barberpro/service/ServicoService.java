@@ -20,6 +20,13 @@ public class ServicoService {
     }
 
     public Servico salvarServico(Servico servico) {
-        return servicoRepository.save(servico);
+
+    if (servicoRepository.existsByNome(servico.getNome())) {
+        throw new IllegalArgumentException(
+            "Já existe um serviço cadastrado com este nome."
+        );
     }
+
+    return servicoRepository.save(servico);
+}
 }
