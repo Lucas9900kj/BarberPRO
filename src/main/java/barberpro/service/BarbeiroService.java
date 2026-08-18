@@ -19,19 +19,18 @@ public class BarbeiroService {
         return barbeiroRepository.findAll();
     }
 
-    public Barbeiro buscarPorId(Long id) {
-        return barbeiroRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Barbeiro não encontrado.")
-                );
+    public Barbeiro salvarBarbeiro(Barbeiro barbeiro) {
+
+        if (barbeiroRepository.existsByTelefone(barbeiro.getTelefone())) {
+            throw new IllegalArgumentException(
+                "Já existe um barbeiro cadastrado com este telefone."
+        );
     }
 
-    public Barbeiro salvarBarbeiro(Barbeiro barbeiro) {
-        return barbeiroRepository.save(barbeiro);
-    }
+    return barbeiroRepository.save(barbeiro);
+}
 
     public void excluirBarbeiro(Long id) {
-        buscarPorId(id);
         barbeiroRepository.deleteById(id);
     }
 }
