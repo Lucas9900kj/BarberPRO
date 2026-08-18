@@ -16,9 +16,11 @@ public class ClienteService {
     }
 
     public Cliente buscarPorId(Long id) {
-    return clienteRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
-}
+        return clienteRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Cliente não encontrado.")
+                );
+    }
 
     public List<Cliente> listarClientes() {
         return clienteRepository.findAll();
@@ -29,6 +31,7 @@ public class ClienteService {
     }
 
     public void excluirCliente(Long id) {
+        buscarPorId(id);
         clienteRepository.deleteById(id);
     }
 }

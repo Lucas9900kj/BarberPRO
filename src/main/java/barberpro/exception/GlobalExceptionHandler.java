@@ -38,6 +38,17 @@ public class GlobalExceptionHandler {
         erro.put("erro", ex.getMessage());
 
         return erro;
-  }
+    }
 
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> tratarNaoEncontrado(
+            RuntimeException ex) {
+
+        Map<String, String> erro = new HashMap<>();
+
+        erro.put("erro", ex.getMessage());
+
+        return erro;
+    }
 }
