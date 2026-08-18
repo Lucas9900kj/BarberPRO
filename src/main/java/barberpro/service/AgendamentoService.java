@@ -91,14 +91,34 @@ public class AgendamentoService {
                 );
     }
 
-    public Agendamento alterarStatus(Long id, StatusAgendamento status) {
+    public Agendamento alterarStatus(Long id, StatusAgendamento novoStatus) {
 
         Agendamento agendamento = buscarPorId(id);
 
-        agendamento.setStatus(status);
+        StatusAgendamento statusAtual = agendamento.getStatus();
 
-        return agendamentoRepository.save(agendamento);
+        boolean transicaoValida =
+                (statusAtual == StatusAgendamento.AGENDADO &&
+                        (novoStatus == StatusAgendamento.CONFIRMADO ||
+                        novoStatus == StatusAgendamento.CANCELADO))
+
+                ||
+
+                (statusAtual == StatusAgendamento.CONFIRMADO &&
+                        (novoStatus == StatusAgendamento.CONCLUIDO ||
+                        novoStatus == StatusAgendamento.CANCELADO));
+
+        if (!transicaoValida) {
+                throw new IllegalArgumentException(
+                        "Alteração de status inválida: "
+                                + statusAtual + " → " + novoStatus
+        );
     }
+
+    agendamento.setStatus(novoStatus);
+
+    return agendamentoRepository.save(agendamento);
+}
 
     public void excluirAgendamento(Long id) {
         agendamentoRepository.deleteById(id);
