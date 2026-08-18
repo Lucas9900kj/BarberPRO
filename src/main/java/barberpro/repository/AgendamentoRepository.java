@@ -19,4 +19,15 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
             LocalDateTime dataHora,
             Long id
     );
+
+    boolean existsByClienteIdAndDataHora(
+            Long clienteId,
+            LocalDateTime dataHora
+    );
+
+    boolean existsByClienteIdAndDataHoraAndIdNot(
+            Long clienteId,
+            LocalDateTime dataHora,
+            Long id
+    );
 }

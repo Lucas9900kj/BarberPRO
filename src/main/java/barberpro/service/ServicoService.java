@@ -2,6 +2,7 @@ package barberpro.service;
 
 import barberpro.entity.Servico;
 import barberpro.repository.ServicoRepository;
+import barberpro.exception.RecursoNaoEncontradoException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +20,26 @@ public class ServicoService {
         return servicoRepository.findAll();
     }
 
-    public Servico salvarServico(Servico servico) {
-
-    if (servicoRepository.existsByNome(servico.getNome())) {
-        throw new IllegalArgumentException(
-            "Já existe um serviço cadastrado com este nome."
-        );
+    public Servico buscarPorId(Long id) {
+        return servicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new RecursoNaoEncontradoException("Serviço não encontrado.")
+                );
     }
 
-    return servicoRepository.save(servico);
-}
+    public Servico salvarServico(Servico servico) {
+
+        if (servicoRepository.existsByNome(servico.getNome())) {
+            throw new IllegalArgumentException(
+                    "Já existe um serviço cadastrado com este nome."
+            );
+        }
+
+        return servicoRepository.save(servico);
+    }
+
+    public void excluirServico(Long id) {
+        buscarPorId(id);
+        servicoRepository.deleteById(id);
+    }
 }

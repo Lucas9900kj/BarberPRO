@@ -11,6 +11,7 @@ import barberpro.repository.BarbeiroRepository;
 import barberpro.repository.ClienteRepository;
 import barberpro.repository.ServicoRepository;
 import org.springframework.stereotype.Service;
+import barberpro.exception.RecursoNaoEncontradoException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,28 +42,58 @@ public class AgendamentoService {
 
     public Agendamento salvarAgendamento(Agendamento agendamento) {
 
+        if (agendamento.getDataHora() == null) {
+            throw new IllegalArgumentException(
+                    "A data e hora do agendamento são obrigatórias."
+            );
+        }
+
         if (agendamento.getDataHora().isBefore(LocalDateTime.now())) {
             throw new IllegalArgumentException(
                     "Não é possível realizar um agendamento para uma data passada."
             );
         }
 
+        if (agendamento.getCliente() == null ||
+                agendamento.getCliente().getId() == null) {
+
+            throw new IllegalArgumentException(
+                    "O cliente é obrigatório."
+            );
+        }
+
+        if (agendamento.getBarbeiro() == null ||
+                agendamento.getBarbeiro().getId() == null) {
+
+            throw new IllegalArgumentException(
+                    "O barbeiro é obrigatório."
+            );
+        }
+
+        if (agendamento.getServico() == null ||
+                agendamento.getServico().getId() == null) {
+
+            throw new IllegalArgumentException(
+                    "O serviço é obrigatório."
+            );
+        }
+
         Cliente cliente = clienteRepository.findById(
                 agendamento.getCliente().getId()
         ).orElseThrow(() ->
-                new RuntimeException("Cliente não encontrado.")
+                new RecursoNaoEncontradoException("Cliente não encontrado.")
         );
 
         Barbeiro barbeiro = barbeiroRepository.findById(
                 agendamento.getBarbeiro().getId()
         ).orElseThrow(() ->
-                new RuntimeException("Barbeiro não encontrado.")
+                new RecursoNaoEncontradoException("Barbeiro não encontrado.")
         );
 
         Servico servico = servicoRepository.findById(
                 agendamento.getServico().getId()
         ).orElseThrow(() ->
-                new RuntimeException("Serviço não encontrado.")
+                new RecursoNaoEncontradoException("Serviço não encontrado.")
         );
 
         agendamento.setCliente(cliente);
@@ -81,6 +112,22 @@ public class AgendamentoService {
             );
         }
 
+        boolean clienteOcupado =
+                agendamentoRepository.existsByClienteIdAndDataHora(
+                        cliente.getId(),
+                        agendamento.getDataHora()
+                );
+
+        if (clienteOcupado) {
+            throw new IllegalArgumentException(
+                    "O cliente já possui um agendamento nesse horário."
+            );
+        }
+
+        if (agendamento.getStatus() == null) {
+            agendamento.setStatus(StatusAgendamento.AGENDADO);
+        }
+
         return agendamentoRepository.save(agendamento);
     }
 
@@ -91,7 +138,15 @@ public class AgendamentoService {
                 );
     }
 
-    public Agendamento alterarStatus(Long id, StatusAgendamento novoStatus) {
+    public Agendamento alterarStatus(
+            Long id,
+            StatusAgendamento novoStatus) {
+
+        if (novoStatus == null) {
+            throw new IllegalArgumentException(
+                    "O status do agendamento é obrigatório."
+            );
+        }
 
         Agendamento agendamento = buscarPorId(id);
 
@@ -100,35 +155,88 @@ public class AgendamentoService {
         boolean transicaoValida =
                 (statusAtual == StatusAgendamento.AGENDADO &&
                         (novoStatus == StatusAgendamento.CONFIRMADO ||
-                        novoStatus == StatusAgendamento.CANCELADO))
-
+                         novoStatus == StatusAgendamento.CANCELADO))
                 ||
-
                 (statusAtual == StatusAgendamento.CONFIRMADO &&
                         (novoStatus == StatusAgendamento.CONCLUIDO ||
-                        novoStatus == StatusAgendamento.CANCELADO));
+                         novoStatus == StatusAgendamento.CANCELADO));
 
         if (!transicaoValida) {
-                throw new IllegalArgumentException(
-                        "Alteração de status inválida: "
-                                + statusAtual + " → " + novoStatus
-        );
+            throw new IllegalArgumentException(
+                    "Alteração de status inválida: "
+                            + statusAtual + " → " + novoStatus
+            );
+        }
+
+        agendamento.setStatus(novoStatus);
+
+        return agendamentoRepository.save(agendamento);
     }
 
-    agendamento.setStatus(novoStatus);
-
-    return agendamentoRepository.save(agendamento);
-}
-
     public void excluirAgendamento(Long id) {
-        agendamentoRepository.deleteById(id);
+
+        Agendamento agendamento = buscarPorId(id);
+
+        if (agendamento.getStatus() == StatusAgendamento.CONCLUIDO ||
+                agendamento.getStatus() == StatusAgendamento.CANCELADO) {
+
+            throw new IllegalArgumentException(
+                    "Não é possível excluir um agendamento concluído ou cancelado."
+            );
+        }
+
+        agendamentoRepository.delete(agendamento);
     }
 
     public Agendamento atualizarAgendamento(
             Long id,
             Agendamento agendamento) {
 
-        buscarPorId(id);
+        Agendamento existente = buscarPorId(id);
+
+        if (existente.getStatus() == StatusAgendamento.CONCLUIDO ||
+                existente.getStatus() == StatusAgendamento.CANCELADO) {
+
+            throw new IllegalArgumentException(
+                    "Não é possível alterar um agendamento concluído ou cancelado."
+            );
+        }
+
+        if (agendamento.getDataHora() == null) {
+            throw new IllegalArgumentException(
+                    "A data e hora do agendamento são obrigatórias."
+            );
+        }
+
+        if (agendamento.getDataHora().isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException(
+                    "Não é possível alterar um agendamento para uma data passada."
+            );
+        }
+
+        if (agendamento.getCliente() == null ||
+                agendamento.getCliente().getId() == null) {
+
+            throw new IllegalArgumentException(
+                    "O cliente é obrigatório."
+            );
+        }
+
+        if (agendamento.getBarbeiro() == null ||
+                agendamento.getBarbeiro().getId() == null) {
+
+            throw new IllegalArgumentException(
+                    "O barbeiro é obrigatório."
+            );
+        }
+
+        if (agendamento.getServico() == null ||
+                agendamento.getServico().getId() == null) {
+
+            throw new IllegalArgumentException(
+                    "O serviço é obrigatório."
+            );
+        }
 
         Cliente cliente = clienteRepository.findById(
                 agendamento.getCliente().getId()
@@ -161,15 +269,30 @@ public class AgendamentoService {
             );
         }
 
+        boolean clienteOcupado =
+                agendamentoRepository.existsByClienteIdAndDataHoraAndIdNot(
+                        cliente.getId(),
+                        agendamento.getDataHora(),
+                        id
+                );
+
+        if (clienteOcupado) {
+            throw new IllegalArgumentException(
+                    "O cliente já possui um agendamento nesse horário."
+            );
+        }
+
         agendamento.setId(id);
         agendamento.setCliente(cliente);
         agendamento.setBarbeiro(barbeiro);
         agendamento.setServico(servico);
+        agendamento.setStatus(existente.getStatus());
 
         return agendamentoRepository.save(agendamento);
     }
 
-    public AgendamentoResponseDTO converterParaDTO(Agendamento agendamento) {
+    public AgendamentoResponseDTO converterParaDTO(
+            Agendamento agendamento) {
 
         AgendamentoResponseDTO dto = new AgendamentoResponseDTO();
 

@@ -2,6 +2,7 @@ package barberpro.service;
 
 import barberpro.entity.Cliente;
 import barberpro.repository.ClienteRepository;
+import barberpro.exception.RecursoNaoEncontradoException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class ClienteService {
     public Cliente buscarPorId(Long id) {
         return clienteRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Cliente não encontrado.")
+                        new RecursoNaoEncontradoException("Cliente não encontrado.")
                 );
     }
 

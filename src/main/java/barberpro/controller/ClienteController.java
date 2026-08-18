@@ -3,7 +3,6 @@ package barberpro.controller;
 import barberpro.entity.Cliente;
 import barberpro.service.ClienteService;
 import jakarta.validation.Valid;
-
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,18 +28,18 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{id}")
-    public void excluirCliente(@PathVariable Long id) {
+    public String excluirCliente(@PathVariable Long id) {
         clienteService.excluirCliente(id);
+        return "Cliente excluído com sucesso.";
     }
-    
+
     @GetMapping("/{id}")
-public Cliente buscarPorId(@PathVariable Long id) {
-    return clienteService.buscarPorId(id);
+    public Cliente buscarPorId(@PathVariable Long id) {
+        return clienteService.buscarPorId(id);
     }
 
     @GetMapping("/teste")
-public String teste() {
-    return "BarberPro funcionando!";
+    public String teste() {
+        return "BarberPro funcionando!";
     }
-    
 }

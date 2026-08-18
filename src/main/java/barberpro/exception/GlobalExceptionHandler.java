@@ -1,8 +1,11 @@
 package barberpro.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,14 +43,29 @@ public class GlobalExceptionHandler {
         return erro;
     }
 
-    @ExceptionHandler(RuntimeException.class)
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> tratarNaoEncontrado(
-            RuntimeException ex) {
+            RecursoNaoEncontradoException ex) {
 
         Map<String, String> erro = new HashMap<>();
 
         erro.put("erro", ex.getMessage());
+
+        return erro;
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> tratarIntegridadeBanco(
+            DataIntegrityViolationException ex) {
+
+        Map<String, String> erro = new HashMap<>();
+
+        erro.put(
+                "erro",
+                "Não é possível excluir o registro porque existem dados vinculados a ele."
+        );
 
         return erro;
     }

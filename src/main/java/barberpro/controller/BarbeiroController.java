@@ -5,6 +5,7 @@ import barberpro.service.BarbeiroService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 import jakarta.validation.Valid;
 
 @RestController
@@ -22,8 +23,15 @@ public class BarbeiroController {
         return barbeiroService.listarBarbeiros();
     }
 
+    @GetMapping("/{id}")
+    public Barbeiro buscarPorId(@PathVariable Long id) {
+        return barbeiroService.buscarPorId(id);
+    }
+
     @PostMapping
-    public Barbeiro criarBarbeiro(@Valid @RequestBody Barbeiro barbeiro) {
+    public Barbeiro criarBarbeiro(
+            @Valid @RequestBody Barbeiro barbeiro) {
+
         return barbeiroService.salvarBarbeiro(barbeiro);
     }
 
