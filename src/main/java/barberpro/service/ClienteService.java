@@ -27,7 +27,20 @@ public class ClienteService {
     }
 
     public Cliente salvarCliente(Cliente cliente) {
-        return clienteRepository.save(cliente);
+
+    if (clienteRepository.existsByEmail(cliente.getEmail())) {
+        throw new IllegalArgumentException(
+                "Já existe um cliente cadastrado com este e-mail."
+        );
+    }
+
+    if (clienteRepository.existsByTelefone(cliente.getTelefone())) {
+        throw new IllegalArgumentException(
+                "Já existe um cliente cadastrado com este telefone."
+        );
+    }
+
+    return clienteRepository.save(cliente);
     }
 
     public void excluirCliente(Long id) {
