@@ -131,13 +131,14 @@ public class AgendamentoService {
         return agendamentoRepository.save(agendamento);
     }
 
-    public Agendamento buscarPorId(Long id) {
-        return agendamentoRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException("Agendamento não encontrado.")
-                );
-    }
-
+        public Agendamento buscarPorId(Long id) {
+           return agendamentoRepository.findById(id)
+                   .orElseThrow(() ->
+                           new RecursoNaoEncontradoException(
+                            "Agendamento não encontrado."
+                    )
+            );
+}
     public Agendamento alterarStatus(
             Long id,
             StatusAgendamento novoStatus) {
